@@ -21,10 +21,25 @@ CONFIG = DATA_ROOT / "config"
 FIGURES_DATA = DATA_ROOT / "figures_data"
 GOLD_GT = DATA_ROOT / "gold_standard" / "gold_standard_labelled" / "gold_standard_groundtruth.csv"
 
-EXPANDED_TISSUENET_ZARR = Path(
-    os.environ.get("DATA_DIR", "/data/xwang3/expanded-tissuenet.zarr")
-)
-GOLD_ZARR = Path(os.environ.get("GOLD_ZARR", "/data/xwang3/gold_standard.zarr"))
+def _resolve_zarr(env_var: str, default: str) -> Path:
+    """Honor ``$env_var`` only when it points at a real zarr archive.
+
+    A globally-set ``DATA_DIR`` (this research box exports ``DATA_DIR=/data``)
+    that is *not* a zarr archive would otherwise silently misdirect the
+    archive-reading notebooks. We require a ``zarr.json`` at the path and
+    reject the legacy "outer wrapper" layout (a same-named subdirectory that
+    holds the real archive). Falls back to the known-good local ``default``.
+    """
+    cand = os.environ.get(env_var)
+    if cand:
+        c = Path(cand)
+        if (c / "zarr.json").is_file() and not (c / c.name).is_dir():
+            return c
+    return Path(default)
+
+
+EXPANDED_TISSUENET_ZARR = _resolve_zarr("DATA_DIR", "/data/xwang3/expanded-tissuenet.zarr")
+GOLD_ZARR = _resolve_zarr("GOLD_ZARR", "/data/xwang3/gold_standard.zarr")
 
 
 def need(p: Path) -> Path:
