@@ -1,5 +1,5 @@
-# Vendored from deepcell-types-research-workspace analysis/celltype_colors.py
-"""Workspace-local color mapping for the 51 cell types.
+# Figure colors for the DeepCell Types reproduction notebooks.
+"""Color mapping for the 51 cell types.
 
 The archive's ``root.attrs["color_mapping"]`` was ad-hoc and not
 color-blind-friendly. This module rebuilds the mapping deterministically
@@ -22,7 +22,7 @@ published convention (Schürch 2020 CRC CODEX, Goltsev 2018 CODEX,
 HuBMAP intestine CODEX 2023). See git history for the review reports.
 
 Use ``celltype_color_mapping(config)`` to obtain the dict — pass the
-TissueNetConfig so the function reads the same lineage_mapping the
+config so the function reads the same lineage_mapping the
 archive declares.
 """
 

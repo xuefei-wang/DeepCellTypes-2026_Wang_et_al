@@ -1,9 +1,9 @@
 """Self-test: reproduce the paper's headline cell-type numbers.
 
-Scores ``final_frozen_cls_test_prediction.csv`` with the vendored
+Scores ``final_frozen_cls_test_prediction.csv`` with the
 hierarchical-collapse + per-(tissue, modality) IQR-fence CT abstention at
 k=0.2 (the "DeepCell Types + IQR(k=0.2)" paper row) and checks the result
-against the workspace README values within ±0.1.
+against the published values within ±0.1.
 
 Run: ``python -m notebooks.dct_figures._selftest``
 """

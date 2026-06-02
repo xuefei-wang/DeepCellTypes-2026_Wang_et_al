@@ -1,1 +1,1 @@
-"""Shared figure helpers vendored from the deepcell-types research workspace."""
+"""Shared figure helpers for the DeepCell Types reproduction notebooks."""

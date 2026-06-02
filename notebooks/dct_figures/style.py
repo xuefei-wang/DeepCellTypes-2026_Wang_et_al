@@ -1,11 +1,10 @@
-# Vendored from deepcell-types-research-workspace analysis/style.py
-# (save_fig / provenance-sidecar helpers removed — notebooks display inline).
-"""Shared visualization style for all analysis scripts.
+# Figure styling for the DeepCell Types reproduction notebooks.
+"""Shared visualization style for the figure notebooks.
 
 Single source of truth for color palette, rcParams, colormaps, layout
-constants, and helpers used across every plotting script.
+constants, and helpers used across every plotting notebook.
 
-Style conforms to Science Advances 2026 figure guidelines:
+Style follows a consistent publication figure style:
 
 - Column widths
     - single column : 3.4 in (8.6 cm)
@@ -88,7 +87,7 @@ CMAP_WARM = LinearSegmentedColormap.from_list(
 
 
 # ---------------------------------------------------------------------------
-# Layout constants (Science Advances 2026 figure spec)
+# Layout constants (publication figure style)
 # ---------------------------------------------------------------------------
 
 # Widths in inches

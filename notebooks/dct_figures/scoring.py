@@ -1,23 +1,22 @@
-"""Torch-free vendored scoring primitives for the figure notebooks.
+"""Scoring helpers for the DeepCell Types reproduction notebooks.
 
-Pure numpy / pandas / (optional) zarr — NO ``torch``, NO ``deepcell_types``
-import. Reproduces the headline cell-type numbers exactly as the workspace
-reference implementation ``analysis/_score_csv.py`` does:
+Pure numpy / pandas / (optional) zarr. Reproduces the headline cell-type
+numbers exactly as the DeepCell Types training code does:
 
     load prediction CSV -> per-cell argmax over the 51 CT columns ->
     optional per-(tissue, modality) IQR-fence abstention at k ->
     confusion matrix -> ``adjust_conf_mat_hierarchy(CELL_TYPE_HIERARCHY)`` ->
     has-support macro / weighted accuracy + F1.
 
-The reference pulls three primitives from ``deepcell_types``:
+The scoring pulls three primitives from ``deepcell_types``:
     - ``deepcell_types.training.config.CELL_TYPE_HIERARCHY``
       (re-exported from ``deepcell_types.training.hierarchy``)
     - ``deepcell_types.training.utils.adjust_conf_mat_hierarchy``
       (defined in ``deepcell_types.training.metrics``)
     - ``deepcell_types.training.abstention.compute_iqr_fence``
       (defined in ``deepcell_types.abstention``)
-plus the ordered class list ``TissueNetConfig.ct2idx``. All four are vendored
-below; each is pure-Python (numpy / dict) and torch-free as imported.
+plus the ordered class list of 51 cell types. All four are reproduced
+below; each is pure-Python (numpy / dict).
 """
 
 from __future__ import annotations
@@ -40,12 +39,10 @@ CELL_TYPE_HIERARCHY = {
 
 
 # ---------------------------------------------------------------------------
-# Vendored from deepcell_types.training.config.TissueNetConfig.ct2idx
-# (built from the expanded-tissuenet.zarr ``cell_type_mapping`` attr; the 51
-# standardized cell types in their canonical training-index order). The
+# Ordered class list: the 51 standardized cell types in their canonical
+# training-index order (matching the DeepCell Types training code). The
 # integer values are an arbitrary-but-fixed bijection; only the name->index
 # mapping consistency matters for the confusion-matrix / hierarchy math.
-# Snapshot extracted from /data/xwang3/expanded-tissuenet.zarr.
 # ---------------------------------------------------------------------------
 CT2IDX = {
     "AlphaCell": 0, "Astrocyte": 1, "Basophil": 2, "Bcell": 3, "BetaCell": 4,
@@ -116,7 +113,7 @@ def compute_iqr_fence(max_softmax, k):
 # Dataset (tissue, modality) metadata — needed only for IQR-fence abstention,
 # which groups cells per (tissue, modality) bucket. Read lazily from the zarr
 # archive so importing this module stays dependency-light (no zarr at import).
-# Vendored from analysis/_score_csv.py::_load_dataset_metadata.
+# Reproduces _load_dataset_metadata from the DeepCell Types training code.
 # ---------------------------------------------------------------------------
 _DATASET_META_CACHE = None
 
@@ -146,7 +143,7 @@ def load_dataset_metadata(zarr_path):
 
 
 # ---------------------------------------------------------------------------
-# Vendored from analysis/_score_csv.py::_kept_mask_for_abstention
+# Reproduces _kept_mask_for_abstention from the DeepCell Types training code
 # ---------------------------------------------------------------------------
 def kept_mask_for_abstention(df, ct_columns, zarr_path, k):
     """Boolean kept-mask: True for cells that pass the per-group k-fence.
@@ -174,7 +171,7 @@ def kept_mask_for_abstention(df, ct_columns, zarr_path, k):
 
 
 # ---------------------------------------------------------------------------
-# Vendored from analysis/_score_csv.py::_hier_conf_mat
+# Reproduces _hier_conf_mat from the DeepCell Types training code
 # ---------------------------------------------------------------------------
 def hier_conf_mat(csv_path, ct2idx, abstention_k=None, zarr_path=None):
     """Hierarchy-adjusted confusion matrix + (n_total, n_kept).
@@ -209,7 +206,7 @@ def hier_conf_mat(csv_path, ct2idx, abstention_k=None, zarr_path=None):
 
 
 # ---------------------------------------------------------------------------
-# Vendored from analysis/_score_csv.py::score_csv
+# Reproduces score_csv from the DeepCell Types training code
 # ---------------------------------------------------------------------------
 def score_csv(csv_path, ct2idx=None, abstention_k=None, zarr_path=None):
     """Hier-adjusted macro/weighted accuracy + F1 (all in %).
@@ -218,7 +215,7 @@ def score_csv(csv_path, ct2idx=None, abstention_k=None, zarr_path=None):
         csv_path: prediction CSV (one row per cell; 51 CT-probability columns
             named after the keys of ``ct2idx`` plus a ``cell_type_actual``
             column).
-        ct2idx: name->index mapping; defaults to the vendored :data:`CT2IDX`.
+        ct2idx: name->index mapping; defaults to :data:`CT2IDX`.
         abstention_k: if > 0, apply per-(tissue, modality) IQR-fence CT
             abstention at this k (requires ``zarr_path``). The paper headline
             uses k=0.2.
@@ -285,7 +282,7 @@ def score_csv(csv_path, ct2idx=None, abstention_k=None, zarr_path=None):
 def score_many(paths_by_label, ct2idx=None):
     """paths_by_label: dict label -> csv_path. Returns dict label -> score dict.
 
-    Vendored from analysis/_score_csv.py::score_many (no abstention applied).
+    Reproduces score_many from the DeepCell Types training code (no abstention applied).
     """
     if ct2idx is None:
         ct2idx = CT2IDX
