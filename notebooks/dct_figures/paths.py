@@ -38,8 +38,8 @@ def _resolve_zarr(env_var: str, default: str) -> Path:
     return Path(default)
 
 
-EXPANDED_TISSUENET_ZARR = _resolve_zarr("DATA_DIR", "/data/xwang3/expanded-tissuenet.zarr")
-GOLD_ZARR = _resolve_zarr("GOLD_ZARR", "/data/xwang3/gold_standard.zarr")
+EXPANDED_TISSUENET_ZARR = _resolve_zarr("DATA_DIR", str(DATA_ROOT / "expanded-tissuenet.zarr"))
+GOLD_ZARR = _resolve_zarr("GOLD_ZARR", str(DATA_ROOT / "gold_standard.zarr"))
 
 
 def need(p: Path) -> Path:

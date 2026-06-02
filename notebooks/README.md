@@ -42,33 +42,27 @@ which is **gitignored**. Download them from the public S3 bucket
 The full list with md5 checksums is in
 [`../data/required_datasets.yaml`](../data/required_datasets.yaml); they land
 under `data/output/`, `data/output/tuning/`, `data/output/few_shot/keren/`,
-`data/embeddings/`, `data/figures_data/`, `data/splits/`, and
-`data/gold_standard/`.
+`data/figures_data/`, and `data/splits/`.
 
-### Zarr archives (separate large release)
+### Zarr archive (separate large release)
 
-Some notebooks read raw imagery / cell crops directly from the released zarr
-archives, which are **not** part of the S3 manifest above:
+Some notebooks read raw imagery / cell crops or per-cell metadata directly
+from the released `expanded-tissuenet.zarr` archive (~2.4 TB), which is
+**not** part of the S3 manifest above:
 
-- `calibration.ipynb` — abstention exemplar (expanded-TissueNet zarr).
-- `marker_positivity.ipynb` — FOV exemplars (gold zarr).
-- `fov_exemplars.ipynb` — FOV exemplar montages (expanded-TissueNet zarr).
-- `data_statistics.ipynb` — dataset composition (expanded-TissueNet zarr).
+- `fov_exemplars.ipynb` — FOV exemplar montages (raw images + masks).
+- `data_statistics.ipynb` — dataset composition (per-cell metadata scan).
+- `calibration.ipynb` — the per-`(tissue, modality)` IQR-fence grouping
+  needs the archive to recover each cell's tissue/modality metadata.
 
-In addition, **all scoring** that applies the per-`(tissue, modality)` IQR
-fence grouping needs the zarr to recover the per-cell tissue/modality
-metadata used for grouping.
-
-The archives are `expanded-tissuenet.zarr` (~2.4 TB) and
-`gold_standard.zarr`. Point the notebooks at them with the env vars below.
+Point the notebooks at it with the env vars below.
 
 ### Environment variables
 
 | Var | Purpose |
 | --- | --- |
 | `DCT_DATA_ROOT` | Override the data root (defaults to `<repo>/data`). |
-| `DATA_DIR` | Path to the expanded-TissueNet zarr. Honored **only** if it points at a real zarr archive (a `zarr.json` is present); otherwise it falls back to the local default. This guards against a globally-exported `DATA_DIR` silently misdirecting the archive-reading notebooks. |
-| `GOLD_ZARR` | Path to the gold-standard zarr. |
+| `DATA_DIR` | Path to the `expanded-tissuenet.zarr` archive. Honored **only** if it points at a real zarr archive (a `zarr.json` is present); otherwise it falls back to the local default. This guards against a globally-exported `DATA_DIR` silently misdirecting the archive-reading notebooks. |
 
 ## Running a notebook
 
