@@ -27,6 +27,9 @@ output/nimbus_all_mp_nimbus_metrics.json: 95d88a4f27f02bc57852adca5ce80e04
 output/ssl_ablation.csv: 32eaf498a79288454bb6f463d3902a91
 output/ssl_pretext_metrics.json: 41875eec500caaad8f5c787631eb0a25
 
+# Per-channel inference-time benchmark (Supp. Fig. 9d)
+output/inference_time.csv: 6031ff94202da6f080e9beef664af8c3
+
 # XGBoost tuning history (Supp. Fig. 6c)
 output/tuning/xgb_tune_history.csv: 4d04e4a2d1dc01d487e12fe4037fcaf6
 
